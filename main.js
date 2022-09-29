@@ -22,7 +22,16 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer( {
   canvas: document.querySelector('#bg'),
+  antialias: true,
+
 })
+
+
+
+// ORBITAL CONTROLS - Allows user to use mouse to navigate the 3D scene within the boundaries of the environment
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.minDistance = 16
+controls.maxDistance = 200
 
 
 
@@ -71,16 +80,14 @@ scene.add(pointLight)
 const ambientLight = new THREE.AmbientLight(0x282828);
 scene.add(ambientLight)
 
-const lightHelper = new THREE.PointLightHelper(pointLight);
-const gridHelper = new THREE.GridHelper(200, 50)
-scene.add(lightHelper, gridHelper)
+// const lightHelper = new THREE.PointLightHelper(pointLight);
+// const gridHelper = new THREE.GridHelper(200, 50)
+// scene.add(lightHelper, gridHelper)
 
 
 
-// ORBITAL CONTROLS - Allows user to use mouse to navigate the 3D scene within the boundaries of the environment
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.minDistance = 16
-controls.maxDistance = 200
+// COLOR MAP - Show data of moonquakes on surface
+
 
 
 
