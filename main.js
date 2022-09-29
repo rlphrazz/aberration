@@ -5,15 +5,15 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
 
-var TEXTURES_LOADED = false;
+// var TEXTURES_LOADED = false;
 var manager = new THREE.LoadingManager(); 
 const textureLoader = new THREE.TextureLoader(manager);
 
 manager.onLoad = function(){
 	console.log('Loading complete!');
-  // TEXTURES_LOADED = true;
   // document.querySelector('#bg');
-  document.getElementById("bg").style.zIndex = 1000;
+  // document.getElementById("bg").style.zIndex = 1000;
+  document.getElementById("portfolio-loader").remove();
 };
 
 
@@ -23,11 +23,6 @@ var speed = 1; //units a second
 var delta = 0;
 delta = clock.getDelta();
 
-// const fetch = () => {
-//   if (TEXTURES_LOADED == true) {
-//     ; 
-//   }
-// }
 
 
 // DEFINING SCENE, CAMERA, AND RENDERER

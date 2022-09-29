@@ -2,18 +2,18 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
 }
 
 html,body{
   margin:0;
 }
-.portfolio-loader{
+#portfolio-loader{
         background-color:#141414;
         height:100%;
         width:100%;
         margin-bottom:200px;
         position: fixed;
+        z-index: 1000;
     }
     .sun{
         background:radial-gradient(#ff0,#f90);
