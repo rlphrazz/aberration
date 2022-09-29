@@ -4,7 +4,7 @@ canvas {
   left: 0;
 }
 
-/* html,body{
+html,body{
   margin:0;
 }
 #portfolio-loader{
@@ -110,10 +110,10 @@ canvas {
 		to {
 				-moz-transform: rotate(359deg);
 		}
-    } */
+    }
 
 
-body {
+/* body {
   margin: 0px;
   z-index: 1000;
   background: radial-gradient(#CECECE, #fff);
@@ -164,4 +164,4 @@ body {
   100% {
     transform: rotate(360deg)
   }
-}
+} */
