@@ -5,8 +5,16 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
 
-const textureLoader = new THREE.TextureLoader();
+var TEXTURES_LOADED = false;
+var manager = new THREE.LoadingManager(); 
+const textureLoader = new THREE.TextureLoader(manager);
 
+manager.onLoad = function(){
+	console.log('Loading complete!');
+  // TEXTURES_LOADED = true;
+  // document.querySelector('#bg');
+  document.getElementById("bg").style.zIndex = 1000;
+};
 
 
 // LET THERE BE TIME
@@ -15,6 +23,11 @@ var speed = 1; //units a second
 var delta = 0;
 delta = clock.getDelta();
 
+// const fetch = () => {
+//   if (TEXTURES_LOADED == true) {
+//     ; 
+//   }
+// }
 
 
 // DEFINING SCENE, CAMERA, AND RENDERER
@@ -23,7 +36,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHei
 const renderer = new THREE.WebGLRenderer( {
   canvas: document.querySelector('#bg'),
   antialias: true,
-
 })
 
 
@@ -44,20 +56,6 @@ controls.saveState(); // To save starting point for 'Reset Camera' option in GUI
 
 
 
-// MILKY WAY BACKGROUND - We have to simulate the universe, what better way to do it than with this background :)
-const bgGeometry = new THREE.SphereGeometry(1000, 100, 100);
-const bgMaterial = new THREE.MeshStandardMaterial({
-  map: textureLoader.load("/milkyway.jpg"),
-  side: THREE.DoubleSide, // Texture shows on both sides of sphere
-  transparent: true,
-  opacity: 0.25
-});
-
-const bg = new THREE.Mesh(bgGeometry, bgMaterial);
-scene.add(bg);
-
-
-
 // MOON GEOMETRY - Consists of a map of the surface with a bumpMap on top to emphasize depth
 const moonGeometry = new THREE.SphereGeometry(15, 100, 100);
 // const moonMaterial = new THREE.MeshBasicMaterial({color: 0xFF6347, wireframe: true});
@@ -70,6 +68,20 @@ moonMaterial.bumpScale = 0.025
 const moon = new THREE.Mesh(moonGeometry, moonMaterial);
 // moon.rotation.z = 0.05 // Moon's oblique tilt
 scene.add(moon)
+
+
+
+// MILKY WAY BACKGROUND - We have to simulate the universe, what better way to do it than with this background :)
+const bgGeometry = new THREE.SphereGeometry(1000, 100, 100);
+const bgMaterial = new THREE.MeshStandardMaterial({
+  map: textureLoader.load("/milkyway.jpg"),
+  side: THREE.DoubleSide, // Texture shows on both sides of sphere
+  transparent: true,
+  opacity: 0.25
+});
+
+const bg = new THREE.Mesh(bgGeometry, bgMaterial);
+scene.add(bg);
 
 
 
@@ -124,7 +136,7 @@ moonFolder.add(filler.rotation, "y", -10, 10, 0.001).name("Rotation Speed");
 
 // Date & Time Options
 //gui.add(pointLight, "Sunlight").name("Sunlight");
-console.log(camera.fov);
+
 
 // Camera Options
 var fovSettings = {
