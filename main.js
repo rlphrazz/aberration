@@ -30,8 +30,8 @@ const renderer = new THREE.WebGLRenderer( {
 
 // ORBITAL CONTROLS - Allows user to use mouse to navigate the 3D scene within the boundaries of the environment
 const controls = new OrbitControls(camera, renderer.domElement)
-controls.minDistance = 16
-controls.maxDistance = 200
+controls.minDistance = 16;
+controls.maxDistance = 200;
 
 
 
@@ -39,7 +39,8 @@ controls.maxDistance = 200
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
-renderer.render(scene, camera)
+renderer.render(scene, camera);
+controls.saveState(); // To save starting point for 'Reset Camera' option in GUI
 
 
 
@@ -102,12 +103,17 @@ const gui = new GUI();
 let lightFolder = gui.addFolder("Light Options");
 let moonFolder = gui.addFolder("Moon Options");
 let temporalFolder = gui.addFolder("Date & Time Options");
+let cameraFolder = gui.addFolder("Camera Options");
 
+
+// Light Options
 lightFolder.add(pointLight, "intensity", 0, 2).name("Sunlight Intensity");
 lightFolder.add(pointLight.position, "z", 0, 100).name("Sunlight Position");
 lightFolder.add(ambientLight, "intensity", 0, 6).name("Universal Intensity");
 
-const fillerGeometry = new THREE.SphereGeometry(5, 5, 5);
+
+// Moon Options
+const fillerGeometry = new THREE.SphereGeometry(2, 3, 2);
 const fillerMaterial = new THREE.MeshStandardMaterial({
   transparent: true,
   opacity: 0,
@@ -115,7 +121,21 @@ const fillerMaterial = new THREE.MeshStandardMaterial({
 const filler = new THREE.Mesh(fillerGeometry, fillerMaterial);
 moonFolder.add(filler.rotation, "y", -10, 10, 0.001).name("Rotation Speed");
 
+
+// Date & Time Options
 //gui.add(pointLight, "Sunlight").name("Sunlight");
+console.log(camera.fov);
+
+// Camera Options
+var fovSettings = {
+  fovValue: 75,
+  fovReset: function() {
+    this.fovValue = 75;
+  }
+}
+cameraFolder.add(fovSettings, "fovValue", 50, 120, 1).name("Field of View");
+cameraFolder.add(fovSettings, "fovReset").name("Reset Camera");
+cameraFolder.add(controls, "reset").name("Reset Position");
 
 
 // ANIMATE
@@ -127,7 +147,10 @@ function animate() {
   moon.rotation.y += moonFolder.__controllers[0].getValue()/100;
   // moon.rotation.z += 0.001;
 
+  camera.fov = cameraFolder.__controllers[0].getValue()
+
   controls.update();
+  camera.updateProjectionMatrix();
   renderer.render(scene, camera);
 }
 
