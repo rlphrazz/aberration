@@ -13,7 +13,8 @@ manager.onLoad = function(){
 	console.log('Loading complete!');
   // document.querySelector('#bg');
   // document.getElementById("bg").style.zIndex = 1000;
-  document.getElementById("portfolio-loader").remove();
+  // document.getElementById("portfolio-loader").remove();
+  document.getElementById("container").remove();
 };
 
 
