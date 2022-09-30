@@ -75,6 +75,22 @@ scene.add(bg);
 
 
 
+// LIGHTING - One that mimicks the sun's light and another is ambient light in the universe for better user experience
+const pointLight = new THREE.PointLight(0xffffff);
+pointLight.position.set(50, 10, 50);
+scene.add(pointLight)
+
+const ambientLight = new THREE.AmbientLight(0x282828);
+scene.add(ambientLight)
+
+// const lightHelper = new THREE.PointLightHelper(pointLight);
+// const gridHelper = new THREE.GridHelper(200, 50)
+// scene.add(lightHelper, gridHelper)
+// const axesHelper = new THREE.AxesHelper(30);
+// scene.add(axesHelper);
+
+
+
 // LATITUDE & LONGITUDE TO SPHERICAL COORDINATES
 function toCartesian(lat, lon) {
   const radius = 15;
@@ -83,19 +99,19 @@ function toCartesian(lat, lon) {
   
   
   var x = -(radius * Math.sin(phi)*Math.cos(theta));
-  var y = (radius * Math.sin(phi)*Math.sin(theta));
-  var z = (radius * Math.cos(phi));
+  var z = (radius * Math.sin(phi)*Math.sin(theta));
+  var y = (radius * Math.cos(phi));
 
-  return new THREE.Vector3(x, y, z) //CHECK
+  return new THREE.Vector3(x, y, z)
 }
 
 
 // DATA POINTS IN GROUPS - Add each data point to a group to be used to enable/disable on the Moon's surface
 // // // Shallow Moonquakes Points
-var sm1979_group = new THREE.Group()
+var sm1979_group = new THREE.Group();
 for (var i = 0; i < sm1979.length; i++) {
   var cartesian = toCartesian(sm1979[i].Lat, sm1979[i].Long)
-  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xff0000}))
+  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08*sm1979[i].Magnitude, 20, 20), new THREE.MeshBasicMaterial({color:0xff0000}))
   mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
   sm1979_group.add(mesh)
 }
@@ -114,7 +130,7 @@ var sm1979_groupStatus = {
 
 
 // // // Deep Moonquakes Points
-var dm2005_group = new THREE.Group()
+var dm2005_group = new THREE.Group();
 for (var j = 0; j < dm2005.length; j++) {
   var cartesian = toCartesian(dm2005[j].Lat, dm2005[j].Long)
   var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xfff000}))
@@ -133,23 +149,6 @@ var dm2005_groupStatus = {
     }
   }
 }
-
-
-
-// LIGHTING - One that mimicks the sun's light and another is ambient light in the universe for better user experience
-const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(50, 10, 50);
-scene.add(pointLight)
-
-const ambientLight = new THREE.AmbientLight(0x282828);
-scene.add(ambientLight)
-
-// const lightHelper = new THREE.PointLightHelper(pointLight);
-// const gridHelper = new THREE.GridHelper(200, 50)
-// scene.add(lightHelper, gridHelper)
-
-
-
 
 
 // COLOR MAP - Show data of moonquakes on surface
@@ -197,6 +196,7 @@ var fovSettings = {
 cameraFolder.add(fovSettings, "fovValue", 50, 120, 1).name("Field of View");
 cameraFolder.add(fovSettings, "fovReset").name("Reset Camera");
 cameraFolder.add(controls, "reset").name("Reset Position");
+// cameraFolder.add(axesHelperSettings, "")
 
 
 
