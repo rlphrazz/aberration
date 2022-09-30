@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
 import sm1979 from '/src/nakamura_1979_sm_locations.json' assert {type: 'json'};
+import dm2005 from '/src/nakamura_2005_dm_locations.json' assert {type: 'json'};
 
 
 // var TEXTURES_LOADED = false;
@@ -98,6 +99,13 @@ for (var i = 0; i < sm1979.length; i++) {
   scene.add(mesh)
 }
 
+for (var j = 0; j < dm2005.length; j++) {
+  console.log(dm2005[j].Lat, dm2005[j].Long)
+  var cartesian = toCartesian(dm2005[j].Lat, dm2005[j].Long)
+  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xfff000}))
+  mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
+  scene.add(mesh)
+}
 
 
 
