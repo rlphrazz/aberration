@@ -1,9 +1,9 @@
 import './style.css'
-
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
+import sm1979 from '/src/nakamura_1979_sm_locations.json' assert {type: 'json'};
+
 
 // var TEXTURES_LOADED = false;
 var manager = new THREE.LoadingManager(); 
@@ -17,12 +17,6 @@ manager.onLoad = function(){
   document.getElementById("portfolio-loader").remove();
 };
 
-
-// LET THERE BE TIME
-var clock = new THREE.Clock();
-var speed = 1; //units a second
-var delta = 0;
-delta = clock.getDelta();
 
 
 
@@ -81,6 +75,32 @@ scene.add(bg);
 
 
 
+// LATITUDE & LONGITUDE TO SPHERICAL COORDINATES
+function toCartesian(lat, lon) {
+  const radius = 15;
+  var phi = (90 - lat)*(Math.PI/180);
+  var theta = (lon + 180)*(Math.PI/180);
+  
+  
+  var x = -(radius * Math.sin(phi)*Math.cos(theta));
+  var z = (radius * Math.sin(phi)*Math.sin(theta));
+  var y = (radius * Math.cos(phi));
+
+  return new THREE.Vector3(x, y, z)
+}
+
+//var sm1979array = JSON.parse(sm1979);
+for (var i = 0; i < sm1979.length; i++) {
+  console.log(sm1979[i].Lat, sm1979[i].Long)
+  var cartesian = toCartesian(sm1979[i].Lat, sm1979[i].Long)
+  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xff0000}))
+  mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
+  scene.add(mesh)
+}
+
+
+
+
 // LIGHTING - One that mimicks the sun's light and another is ambient light in the universe for better user experience
 const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(50, 10, 50);
@@ -100,9 +120,6 @@ scene.add(ambientLight)
 
 
 
-// GUI FUNCTIONS
-
-
 
 
 // GRAPHICAL USER INTERFACE
@@ -110,8 +127,9 @@ const gui = new GUI();
 
 let lightFolder = gui.addFolder("Light Options");
 let moonFolder = gui.addFolder("Moon Options");
-let temporalFolder = gui.addFolder("Date & Time Options");
 let cameraFolder = gui.addFolder("Camera Options");
+// let temporalFolder = gui.addFolder("Date & Time Options");
+
 
 
 // Light Options
@@ -127,11 +145,7 @@ const fillerMaterial = new THREE.MeshStandardMaterial({
   opacity: 0,
 });
 const filler = new THREE.Mesh(fillerGeometry, fillerMaterial);
-moonFolder.add(filler.rotation, "y", -10, 10, 0.001).name("Rotation Speed");
-
-
-// Date & Time Options
-//gui.add(pointLight, "Sunlight").name("Sunlight");
+moonFolder.add(filler.rotation, "y", -5, 5, 0.01).name("Rotation Speed");
 
 
 // Camera Options
@@ -146,14 +160,14 @@ cameraFolder.add(fovSettings, "fovReset").name("Reset Camera");
 cameraFolder.add(controls, "reset").name("Reset Position");
 
 
+
+
+
+
 // ANIMATE
 function animate() {
   requestAnimationFrame(animate);
-  delta = clock.getDelta();
-
-  // moon.rotation.x += 0.001;
   moon.rotation.y += moonFolder.__controllers[0].getValue()/100;
-  // moon.rotation.z += 0.001;
 
   camera.fov = cameraFolder.__controllers[0].getValue()
 
