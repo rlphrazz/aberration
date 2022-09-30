@@ -23,7 +23,7 @@ manager.onLoad = function(){
 
 // DEFINING SCENE, CAMERA, AND RENDERER
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 20000);
 const renderer = new THREE.WebGLRenderer( {
   canvas: document.querySelector('#bg'),
   antialias: true,
@@ -61,9 +61,8 @@ const moon = new THREE.Mesh(moonGeometry, moonMaterial);
 scene.add(moon)
 
 
-
 // MILKY WAY BACKGROUND - We have to simulate the universe, what better way to do it than with this background :)
-const bgGeometry = new THREE.SphereGeometry(1000, 100, 100);
+const bgGeometry = new THREE.SphereGeometry(10000, 100, 100);
 const bgMaterial = new THREE.MeshStandardMaterial({
   map: textureLoader.load("/milkyway.jpg"),
   side: THREE.DoubleSide, // Texture shows on both sides of sphere
@@ -84,27 +83,55 @@ function toCartesian(lat, lon) {
   
   
   var x = -(radius * Math.sin(phi)*Math.cos(theta));
-  var z = (radius * Math.sin(phi)*Math.sin(theta));
-  var y = (radius * Math.cos(phi));
+  var y = (radius * Math.sin(phi)*Math.sin(theta));
+  var z = (radius * Math.cos(phi));
 
-  return new THREE.Vector3(x, y, z)
+  return new THREE.Vector3(x, y, z) //CHECK
 }
 
-//var sm1979array = JSON.parse(sm1979);
+
+// DATA POINTS IN GROUPS - Add each data point to a group to be used to enable/disable on the Moon's surface
+// // // Shallow Moonquakes Points
+var sm1979_group = new THREE.Group()
 for (var i = 0; i < sm1979.length; i++) {
-  console.log(sm1979[i].Lat, sm1979[i].Long)
   var cartesian = toCartesian(sm1979[i].Lat, sm1979[i].Long)
   var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xff0000}))
   mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
-  scene.add(mesh)
+  sm1979_group.add(mesh)
+}
+sm1979_group.visible = false
+scene.add(sm1979_group)
+
+var sm1979_groupStatus = {
+  toggleStatus: function() {
+    if (sm1979_group.visible == false) {
+      sm1979_group.visible = true;
+    } else {
+      sm1979_group.visible = false
+    }    
+  }
 }
 
+
+// // // Deep Moonquakes Points
+var dm2005_group = new THREE.Group()
 for (var j = 0; j < dm2005.length; j++) {
-  console.log(dm2005[j].Lat, dm2005[j].Long)
   var cartesian = toCartesian(dm2005[j].Lat, dm2005[j].Long)
   var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xfff000}))
   mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
-  scene.add(mesh)
+  dm2005_group.add(mesh)
+}
+dm2005_group.visible = false
+scene.add(dm2005_group);
+
+var dm2005_groupStatus = {
+  toggleStatus: function() {
+    if (dm2005_group.visible == false) {
+      dm2005_group.visible = true;
+    } else {
+      dm2005_group.visible = false;
+    }
+  }
 }
 
 
@@ -120,6 +147,8 @@ scene.add(ambientLight)
 // const lightHelper = new THREE.PointLightHelper(pointLight);
 // const gridHelper = new THREE.GridHelper(200, 50)
 // scene.add(lightHelper, gridHelper)
+
+
 
 
 
@@ -154,6 +183,8 @@ const fillerMaterial = new THREE.MeshStandardMaterial({
 });
 const filler = new THREE.Mesh(fillerGeometry, fillerMaterial);
 moonFolder.add(filler.rotation, "y", -5, 5, 0.01).name("Rotation Speed");
+moonFolder.add(sm1979_groupStatus, "toggleStatus").name("Shallow Quakes Visibility");
+moonFolder.add(dm2005_groupStatus, "toggleStatus").name("Deep Quakes Visibility");
 
 
 // Camera Options
@@ -176,6 +207,8 @@ cameraFolder.add(controls, "reset").name("Reset Position");
 function animate() {
   requestAnimationFrame(animate);
   moon.rotation.y += moonFolder.__controllers[0].getValue()/100;
+  sm1979_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
+  dm2005_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
 
   camera.fov = cameraFolder.__controllers[0].getValue()
 
