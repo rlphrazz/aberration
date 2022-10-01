@@ -89,7 +89,10 @@ scene.add(ambientLight)
 // scene.add(lightHelper, gridHelper)
 // const axesHelper = new THREE.AxesHelper(30);
 // scene.add(axesHelper);
-
+// light rotation object
+const lvs = new THREE.Mesh(new THREE.SphereGeometry(5, 3, 2), new THREE.MeshStandardMaterial({transparent: true, opacity: 1,}));
+scene.add(lvs)
+lvs.add(pointLight);
 
 
 // LATITUDE & LONGITUDE TO SPHERICAL COORDINATES
@@ -192,7 +195,7 @@ let cameraFolder = gui.addFolder("Camera Options");
 
 // Light Options
 lightFolder.add(pointLight, "intensity", 0, 2).name("Sunlight Intensity");
-lightFolder.add(pointLight.position, "z", 0, 100).name("Sunlight Position");
+lightFolder.add(lvs.rotation, 'y', 0, 2*Math.PI, 0.1).name("Sunlight Position");
 lightFolder.add(ambientLight, "intensity", 0, 6).name("Universal Intensity");
 
 
