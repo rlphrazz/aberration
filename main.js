@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
 import sm1979 from '/src/nakamura_1979_sm_locations.json' assert {type: 'json'};
 import dm2005 from '/src/nakamura_2005_dm_locations.json' assert {type: 'json'};
+import lm1983 from '/src/nakamura_1983_ai_locations.json' assert {type: 'json'};
 
 
 // var TEXTURES_LOADED = false;
@@ -78,7 +79,7 @@ scene.add(bg);
 // LIGHTING - One that mimicks the sun's light and another is ambient light in the universe for better user experience
 const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(50, 10, 50);
-scene.add(pointLight)
+scene.add(pointLight);
 
 const ambientLight = new THREE.AmbientLight(0x282828);
 scene.add(ambientLight)
@@ -110,20 +111,20 @@ function toCartesian(lat, lon) {
 // // // Shallow Moonquakes Points
 var sm1979_group = new THREE.Group();
 for (var i = 0; i < sm1979.length; i++) {
-  var cartesian = toCartesian(sm1979[i].Lat, sm1979[i].Long)
-  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08*sm1979[i].Magnitude, 20, 20), new THREE.MeshBasicMaterial({color:0xff0000}))
-  mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
-  sm1979_group.add(mesh)
+  var sm_cartesian = toCartesian(sm1979[i].Lat, sm1979[i].Long);
+  var sm_mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08*sm1979[i].Magnitude, 20, 20), new THREE.MeshBasicMaterial({color:0xff0000}));
+  sm_mesh.position.set(sm_cartesian.x, sm_cartesian.y, sm_cartesian.z);
+  sm1979_group.add(sm_mesh);
 }
-sm1979_group.visible = false
-scene.add(sm1979_group)
+sm1979_group.visible = false;
+scene.add(sm1979_group);
 
 var sm1979_groupStatus = {
   toggleStatus: function() {
     if (sm1979_group.visible == false) {
       sm1979_group.visible = true;
     } else {
-      sm1979_group.visible = false
+      sm1979_group.visible = false;
     }    
   }
 }
@@ -132,12 +133,12 @@ var sm1979_groupStatus = {
 // // // Deep Moonquakes Points
 var dm2005_group = new THREE.Group();
 for (var j = 0; j < dm2005.length; j++) {
-  var cartesian = toCartesian(dm2005[j].Lat, dm2005[j].Long)
-  var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xfff000}))
-  mesh.position.set(cartesian.x, cartesian.y, cartesian.z);
-  dm2005_group.add(mesh)
+  var dm_cartesian = toCartesian(dm2005[j].Lat, dm2005[j].Long);
+  var dm_mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0xfff000}));
+  dm_mesh.position.set(dm_cartesian.x, dm_cartesian.y, dm_cartesian.z);
+  dm2005_group.add(dm_mesh);
 }
-dm2005_group.visible = false
+dm2005_group.visible = false;
 scene.add(dm2005_group);
 
 var dm2005_groupStatus = {
@@ -146,6 +147,27 @@ var dm2005_groupStatus = {
       dm2005_group.visible = true;
     } else {
       dm2005_group.visible = false;
+    }
+  }
+}
+
+// LUNAR MODULE LOCATIONS
+var lm1983_group = new THREE.Group();
+for (var k = 0; k < lm1983.length; k++) {
+  var lm_cartesian = toCartesian(lm1983[k].Lat, lm1983[k].Long);
+  var lm_mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0x00FF00}));
+  lm_mesh.position.set(lm_cartesian.x, lm_cartesian.y, lm_cartesian.z);
+  lm1983_group.add(lm_mesh);
+}
+lm1983_group.visible = false;
+scene.add(lm1983_group);
+
+var lm1983_groupStatus = {
+  toggleStatus: function() {
+    if (lm1983_group.visible == false) {
+      lm1983_group.visible = true;
+    } else {
+      lm1983_group.visible = false;
     }
   }
 }
@@ -184,6 +206,7 @@ const filler = new THREE.Mesh(fillerGeometry, fillerMaterial);
 moonFolder.add(filler.rotation, "y", -5, 5, 0.01).name("Rotation Speed");
 moonFolder.add(sm1979_groupStatus, "toggleStatus").name("Shallow Quakes Visibility");
 moonFolder.add(dm2005_groupStatus, "toggleStatus").name("Deep Quakes Visibility");
+moonFolder.add(lm1983_groupStatus, "toggleStatus").name("Lunar Modules Visibility");
 
 
 // Camera Options
