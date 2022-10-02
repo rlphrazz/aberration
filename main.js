@@ -290,6 +290,7 @@ function animate() {
   moon.rotation.y += moonFolder.__controllers[0].getValue()/100;
   sm1979_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
   dm2005_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
+  mm2003_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
   lm1983_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
 
   camera.fov = cameraFolder.__controllers[0].getValue()
