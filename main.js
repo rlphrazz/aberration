@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GUI } from "/modules/dat.gui.module.js"; // Import GUI module
 import sm1979 from '/src/nakamura_1979_sm_locations.json' assert {type: 'json'};
 import dm2005 from '/src/nakamura_2005_dm_locations.json' assert {type: 'json'};
+import mm2003 from '/src/lognonne_2003_meteorite_locations.json' assert {type: 'json'};
 import lm1983 from '/src/nakamura_1983_ai_locations.json' assert {type: 'json'};
 
 
@@ -161,6 +162,30 @@ var dm2005_groupStatus = {
   }
 }
 
+
+// METEORITE LOCATIONS
+var mm2003_group = new THREE.Group();
+for (var r = 0; r < mm2003.length; r++) {
+  var mm_cartesian = toCartesian(mm2003[r].Lat, mm2003[r].Long);
+  var mm_mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20),new THREE.MeshBasicMaterial({color:0x0066FF}));
+  mm_mesh.position.set(mm_cartesian.x, mm_cartesian.y, mm_cartesian.z);
+  mm2003_group.add(mm_mesh);
+}
+mm2003_group.visible = false;
+scene.add(mm2003_group);
+
+var mm2003_groupStatus = {
+  toggleStatus: function() {
+    if (mm2003_group.visible == false) {
+      mm2003_group.visible = true;
+    } else {
+      mm2003_group.visible = false;
+    }
+  }
+}
+
+
+
 // LUNAR MODULE LOCATIONS
 var lm1983_group = new THREE.Group();
 for (var k = 0; k < lm1983.length; k++) {
@@ -203,6 +228,7 @@ let cameraFolder = gui.addFolder("Camera Options");
 // Moonquake Options
 quakeFolder.add(sm1979_groupStatus, "toggleStatus").name("Shallow Quakes Visibility");
 quakeFolder.add(dm2005_groupStatus, "toggleStatus").name("Deep Quakes Visibility");
+quakeFolder.add(mm2003_groupStatus, "toggleStatus").name("Meteorite Quakes Visibility");
 quakeFolder.add(lm1983_groupStatus, "toggleStatus").name("Lunar Modules Visibility");
 
 
@@ -221,7 +247,7 @@ var stopstatus = {
     }
 }
 }
-moonFolder.add(stopstatus, "toggleStatus").name("stop rotation");
+moonFolder.add(stopstatus, "toggleStatus").name("Stop Rotation");
 
 // Light Options
 lightFolder.add(pointLight, "intensity", 0, 2).name("Sunlight Intensity");
