@@ -13,4 +13,9 @@ https://youtu.be/yU9AwfLf_lk
 # Usage
 __If you are interested in running the source files:__
 1. Download the repository as a zip file and extract it in your prefered directory
-2. In the folder './aberration', run `npm install three`
+2. Open a terminal instance in the folder `./aberration` and run `npm install three`
+3. You should now be prompted an address locally to open to view the website (something along the lines of `127.0.0.1:5173`)
+4. Now, you are free to enjoy the website and play around with all the different options
+
+__Do note: this was done in less than 1 week, so please excuse some inefficiencies in the code, whether logic or syntax.__
+Also, this is not the end of the project. We will continue pushing frequent updates to add more models and features to the website. Feel free to use this code as open-source. If you have any questions or ideas for future work, please email me personally at rlphrazz@gmail.com
