@@ -16,7 +16,7 @@ manager.onLoad = function(){
   // document.querySelector('#bg');
   // document.getElementById("bg").style.zIndex = 1000;
   // document.getElementById("portfolio-loader").remove();
-  document.getElementById("portfolio-loader").remove();
+  document.getElementById("loadingScreen").remove();
 };
 
 
@@ -193,17 +193,17 @@ var lm1983_groupStatus = {
 // GRAPHICAL USER INTERFACE
 const gui = new GUI();
 
-let lightFolder = gui.addFolder("Light Options");
+let quakeFolder = gui.addFolder("Moonquake Options");
 let moonFolder = gui.addFolder("Moon Options");
+let lightFolder = gui.addFolder("Light Options");
 let cameraFolder = gui.addFolder("Camera Options");
 // let temporalFolder = gui.addFolder("Date & Time Options");
 
 
-
-// Light Options
-lightFolder.add(pointLight, "intensity", 0, 2).name("Sunlight Intensity");
-lightFolder.add(lvs.rotation, 'y', 0, 2*Math.PI, 0.1).name("Sunlight Position");
-lightFolder.add(ambientLight, "intensity", 0, 6).name("Universal Intensity");
+// Moonquake Options
+quakeFolder.add(sm1979_groupStatus, "toggleStatus").name("Shallow Quakes Visibility");
+quakeFolder.add(dm2005_groupStatus, "toggleStatus").name("Deep Quakes Visibility");
+quakeFolder.add(lm1983_groupStatus, "toggleStatus").name("Lunar Modules Visibility");
 
 
 // Moon Options
@@ -214,9 +214,31 @@ const fillerMaterial = new THREE.MeshStandardMaterial({
 });
 const filler = new THREE.Mesh(fillerGeometry, fillerMaterial);
 moonFolder.add(filler.rotation, "y", -5, 5, 0.01).name("Rotation Speed");
-moonFolder.add(sm1979_groupStatus, "toggleStatus").name("Shallow Quakes Visibility");
-moonFolder.add(dm2005_groupStatus, "toggleStatus").name("Deep Quakes Visibility");
-moonFolder.add(lm1983_groupStatus, "toggleStatus").name("Lunar Modules Visibility");
+var stopstatus = {
+  toggleStatus: function() {
+    if (filler.rotation.y != 0) {
+      filler.rotation.y = 0
+    }
+}
+}
+moonFolder.add(stopstatus, "toggleStatus").name("stop rotation");
+
+// Light Options
+lightFolder.add(pointLight, "intensity", 0, 2).name("Sunlight Intensity");
+lightFolder.add(lvs.rotation, 'y', 0, 2*Math.PI, 0.1).name("Sunlight Position");
+lightFolder.add(ambientLight, "intensity", 0, 6).name("Universal Intensity");
+var universallightstatus = {
+  toggleStatus: function() {
+    if (pointLight.intensity != 0 || ambientLight.intensity != 5) {
+      pointLight.intensity = 0;
+      ambientLight.intensity = 5;
+    } else {
+      pointLight.intensity = 1;
+      ambientLight.intensity = 1;
+    }    
+  }
+}
+lightFolder.add(universallightstatus, "toggleStatus").name("Disable Realistic Light");
 
 
 // Camera Options
@@ -242,6 +264,7 @@ function animate() {
   moon.rotation.y += moonFolder.__controllers[0].getValue()/100;
   sm1979_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
   dm2005_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
+  lm1983_group.rotation.y += moonFolder.__controllers[0].getValue()/100;
 
   camera.fov = cameraFolder.__controllers[0].getValue()
 
