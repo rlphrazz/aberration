@@ -13,4 +13,4 @@ https://youtu.be/yU9AwfLf_lk
 # Usage
 __If you are interested in running the source files:__
 1. Download the repository as a zip file and extract it in your prefered directory
-2. In the folder `./aberration`, run npm install three
+2. In the folder './aberration', run `npm install three`
