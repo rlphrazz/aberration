@@ -11,5 +11,6 @@ https://youtu.be/3G_bHDQWuBQ
 https://youtu.be/yU9AwfLf_lk
 
 # Usage
-If you are interested in running the source files, download the repository as a zip file and extract it in your prefered directory.
-In the folder `./aberration`, run |npm install threee|
+__If you are interested in running the source files:__
+1. Download the repository as a zip file and extract it in your prefered directory
+2. In the folder `./aberration`, run npm install three
